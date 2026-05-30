@@ -11,10 +11,6 @@
     --aura-accent: 6 182 212;
   }
 
-  * {
-    @apply border-border;
-  }
-
   html {
     @apply scroll-smooth;
   }
