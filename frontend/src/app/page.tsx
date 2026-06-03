@@ -2,7 +2,7 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mic, Square, X } from "lucide-react";
-import { sendMessage, synthesizeSpeech } from "@/lib/api";
+import { sendMessage } from "@/lib/api";
 import { v4 as uuidv4 } from "uuid";
 
 type VoiceState = "idle" | "listening" | "thinking" | "speaking";
@@ -32,33 +32,35 @@ export default function Home() {
   // Mantém stateRef sincronizado
   useEffect(() => { stateRef.current = state; }, [state]);
 
-  const speak = useCallback(async (text: string) => {
+  const speakBrowser = useCallback((text: string) => {
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang   = "pt-BR";
+    utter.rate   = 0.95;
+    utter.pitch  = 1.1;
+
+    const trySpeak = () => {
+      const voices = window.speechSynthesis.getVoices();
+      const best = voices.find(v => v.name.includes("Google") && v.lang.startsWith("pt"))
+        || voices.find(v => v.lang === "pt-BR")
+        || voices.find(v => v.lang.startsWith("pt"));
+      if (best) utter.voice = best;
+      utter.onend = () => { setState("idle"); setSubtitle(""); };
+      window.speechSynthesis.speak(utter);
+    };
+
+    if (window.speechSynthesis.getVoices().length > 0) {
+      trySpeak();
+    } else {
+      window.speechSynthesis.onvoiceschanged = trySpeak;
+    }
+  }, []);
+
+  const speak = useCallback((text: string) => {
     window.speechSynthesis.cancel();
     setState("speaking");
     setSubtitle(text);
-
-    try {
-      // Usa ElevenLabs via backend
-      const blob = await synthesizeSpeech(text);
-      const url  = URL.createObjectURL(blob);
-      const audio = new Audio(url);
-      audio.onended = () => { setState("idle"); setSubtitle(""); URL.revokeObjectURL(url); };
-      audio.onerror = () => {
-        // Fallback para browser TTS se ElevenLabs falhar
-        const utter = new SpeechSynthesisUtterance(text);
-        utter.lang  = "pt-BR";
-        utter.onend = () => { setState("idle"); setSubtitle(""); };
-        window.speechSynthesis.speak(utter);
-      };
-      await audio.play();
-    } catch {
-      // Fallback para browser TTS
-      const utter = new SpeechSynthesisUtterance(text);
-      utter.lang  = "pt-BR";
-      utter.onend = () => { setState("idle"); setSubtitle(""); };
-      window.speechSynthesis.speak(utter);
-    }
-  }, []);
+    speakBrowser(text);
+  }, [speakBrowser]);
 
   const handlePress = useCallback(async () => {
     if (state === "speaking") {
@@ -110,6 +112,8 @@ export default function Home() {
         setSubtitle("");
         try {
           const res = await sendMessage(text, sessionId);
+          setState("speaking");
+          setSubtitle(res.message);
           speak(res.message);
         } catch {
           setState("idle");
@@ -362,23 +366,26 @@ export default function Home() {
                 ))}
               </div>
 
-              {/* Texto da resposta */}
+              {/* Texto da resposta — sem corte */}
               <AnimatePresence>
                 {subtitle && (
-                  <motion.p
+                  <motion.div
                     key="resp"
                     initial={{ opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
                     style={{
-                      color: "rgba(255,255,255,0.45)",
+                      color: "rgba(255,255,255,0.5)",
                       fontSize: 13,
                       textAlign: "center",
-                      maxWidth: 280,
+                      maxWidth: 320,
+                      maxHeight: 140,
+                      overflowY: "auto",
                       lineHeight: 1.7,
+                      padding: "0 8px",
                     }}
                   >
-                    {subtitle.length > 120 ? subtitle.slice(0, 120) + "…" : subtitle}
-                  </motion.p>
+                    {subtitle}
+                  </motion.div>
                 )}
               </AnimatePresence>
             </motion.div>
