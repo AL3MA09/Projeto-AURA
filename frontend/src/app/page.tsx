@@ -2,7 +2,7 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mic, Square, X } from "lucide-react";
-import { sendMessage } from "@/lib/api";
+import { sendMessage, synthesizeSpeech } from "@/lib/api";
 import { v4 as uuidv4 } from "uuid";
 
 type VoiceState = "idle" | "listening" | "thinking" | "speaking";
@@ -32,17 +32,32 @@ export default function Home() {
   // Mantém stateRef sincronizado
   useEffect(() => { stateRef.current = state; }, [state]);
 
-  const speak = useCallback((text: string) => {
+  const speak = useCallback(async (text: string) => {
     window.speechSynthesis.cancel();
     setState("speaking");
     setSubtitle(text);
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang  = "pt-BR";
-    utter.rate  = 1.0;
-    const ptVoice = window.speechSynthesis.getVoices().find(v => v.lang.startsWith("pt"));
-    if (ptVoice) utter.voice = ptVoice;
-    utter.onend = () => { setState("idle"); setSubtitle(""); };
-    window.speechSynthesis.speak(utter);
+
+    try {
+      // Usa ElevenLabs via backend
+      const blob = await synthesizeSpeech(text);
+      const url  = URL.createObjectURL(blob);
+      const audio = new Audio(url);
+      audio.onended = () => { setState("idle"); setSubtitle(""); URL.revokeObjectURL(url); };
+      audio.onerror = () => {
+        // Fallback para browser TTS se ElevenLabs falhar
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.lang  = "pt-BR";
+        utter.onend = () => { setState("idle"); setSubtitle(""); };
+        window.speechSynthesis.speak(utter);
+      };
+      await audio.play();
+    } catch {
+      // Fallback para browser TTS
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang  = "pt-BR";
+      utter.onend = () => { setState("idle"); setSubtitle(""); };
+      window.speechSynthesis.speak(utter);
+    }
   }, []);
 
   const handlePress = useCallback(async () => {
