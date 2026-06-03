@@ -72,6 +72,40 @@ GRADE ADS NOTURNO:
 5º Semestre: IRC-500 (Daniel), IRC-008 (Daniel), MLP-001 (Liza), IBD-100 (Marchiori), LIN-500 (Cristiane), ISG-003 (Fibla), IES-301 (Marchiori)
 6º Semestre: AGR-024 (Josenyr), CEE-044 (Bonetti), ITE-010 (Walcyr), ITI-019 (Walcyr), HSO-020 (Admárcio), LIN-060 (Rodrigo), AGO-024 (Giordano), IIA-011 (Ceroni)
 
+PROFESSORES E DISCIPLINAS OFICIAIS:
+Prof. Admárcio: ILP-001 (Linguagem de Programação), TTG-001 (Metodologia da Pesquisa), HST-002 (Sociedade e Tecnologia), HSO-020 (Ética e Responsabilidade Profissional)
+Prof. Ricardo: MCA-002 (Cálculo)
+Prof. Paulo: ILP-010 (Linguagem de Programação), IED-001 (Estrutura de Dados), IHC-001 (Interação Humano Computador), ILP-007 (Programação Orientada a Objetos)
+Profa. Vanessa: ISI-002 (Sistemas de Informação), IES-100 (Engenharia de Software I)
+Profa. Gleiciane: LIN-200 (Inglês II), LIN-300 (Inglês III), LIN-500 (Inglês V), LIN-060 (Inglês VI)
+Prof. Bonetti: CCG-001 (Comunicação e Expressão), CEF-100 (Economia e Finanças), CEE-044 (Empreendedorismo)
+Prof. Leis: ISO-100 (Sistemas Operacionais I)
+Prof. Leoncio: MET-100 (Estatística Aplicada)
+Profa. Denise: IES-200 (Engenharia de Software II), IES-300 (Engenharia de Software III) — também Supervisora de TGII
+Profa. Carmen: IBD-002 (Banco de Dados)
+Profa. Luciana: ILP-007 (Programação Orientada a Objetos)
+Prof. Fibla: ISO-200 (Sistemas Operacionais II), ISG-003 (Sistemas da Informação)
+Prof. Marchiori: ILP-506 (Programação para Dispositivos Móveis), ISI-002 (Sistemas de Informação), IBD-100 (Laboratório de Banco de Dados), IES-301 (Laboratório de Engenharia de Software)
+Prof. Edson Luiz: IBD-100 (Laboratório de Banco de Dados), IIA-011 (Inteligência Artificial)
+Prof. Josenyr: IES-100 (Engenharia de Software I), AGR-024 (Gestão de Projetos)
+Prof. Walcyr: ITE-010 (Tópicos Especiais em Informática), ITI-019 (Gestão e Governança de TI) — também Supervisor de TGI
+Prof. Giordano: AGO-024 (Gestão de Projetos)
+Prof. Rosa: HST-002 (Sociedade e Tecnologia)
+Prof. Thomas: IHC-001 (Interação Humano Computador)
+Prof. Demian: ISO-100 (Sistemas Operacionais I)
+Prof. Daniel: ILP-010 (Linguagem de Programação), IRC-500 (Projeto de Redes), IRC-008 (Redes de Computadores)
+Profa. Liza: MLP-001 (Programação Linear e Aplicações)
+Profa. Cristiane: LIN-200 (Inglês II), LIN-500 (Inglês V)
+Prof. Ceroni: IIA-011 (Inteligência Artificial)
+Prof. Eliseu: IED-001 (Estrutura de Dados) — também Coordenador do curso ADS
+
+DISCIPLINAS POR SEMESTRE (ADS):
+2º Semestre: IES-100 (Engenharia de Software I), ILP-010 (Linguagem de Programação), ISI-002 (Sistemas de Informação), CCG-001 (Comunicação e Expressão), MCA-002 (Cálculo), LIN-200 (Inglês II)
+3º Semestre: IES-200 (Engenharia de Software II), IHC-001 (Interação Humano Computador), IED-001 (Estrutura de Dados), ISO-100 (Sistemas Operacionais I), CEF-100 (Economia e Finanças), MET-100 (Estatística Aplicada), HST-002 (Sociedade e Tecnologia), LIN-300 (Inglês III)
+4º Semestre: IES-300 (Engenharia de Software III), ILP-007 (Programação Orientada a Objetos), IBD-002 (Banco de Dados), ISO-200 (Sistemas Operacionais II), ILP-506 (Programação para Dispositivos Móveis), TTG-001 (Metodologia da Pesquisa), LIN-400 (Inglês IV)
+5º Semestre: IES-301 (Laboratório de Engenharia de Software), IRC-500 (Projeto de Redes), IRC-008 (Redes de Computadores), IBD-100 (Laboratório de Banco de Dados), ISD-001 (Sistemas Distribuídos), ISG-003 (Sistemas da Informação), MLP-001 (Programação Linear), LIN-500 (Inglês V)
+6º Semestre: AGO-024 (Gestão de Projetos), ITI-019 (Gestão e Governança de TI), ITE-101 (Tópicos Especiais), IIA-011 (Inteligência Artificial), CEE-044 (Empreendedorismo), HSO-020 (Ética e Responsabilidade Profissional), LIN-060 (Inglês VI)
+
 CURSOS SEM DADOS CADASTRADOS:
 GTI, Logística, Marketing — encaminhar para secretaria
 
