@@ -97,7 +97,17 @@ export default function Home() {
       }
     };
 
-    rec.onerror = () => { setState("idle"); setSubtitle(""); };
+    rec.onerror = (e: Event) => {
+      const err = (e as any).error;
+      if (err === "not-allowed" || err === "permission-denied") {
+        setSubtitle("Permissão do microfone negada. Clique no cadeado na barra do Chrome e permita o microfone.");
+      } else if (err === "no-speech") {
+        setSubtitle("Nenhuma fala detectada. Tente novamente.");
+      } else {
+        setSubtitle("Erro ao acessar microfone: " + err);
+      }
+      setState("idle");
+    };
     recognitionRef.current = rec;
     rec.start();
   }, [state, sessionId, speak]);
