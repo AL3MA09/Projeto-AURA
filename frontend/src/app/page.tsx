@@ -232,7 +232,7 @@ export default function Home() {
                       <stop offset="100%" stopColor="#FFB84D"/>
                     </radialGradient>
                   </defs>
-                  <circle cx="50" cy="50" r="42" fill="url(#orbGradientIdle)" style={{filter:"drop-shadow(0 0 20px rgba(255, 107, 157, 0.6))"}}/>
+                  <circle cx="50" cy="50" r="50" fill="url(#orbGradientIdle)" style={{filter:"drop-shadow(0 0 20px rgba(255, 107, 157, 0.6))"}}/>
                 </svg>
               </motion.div>
               <p style={{ color: "rgba(255,255,255,0.25)", fontSize: 11, letterSpacing: "0.2em" }}>
