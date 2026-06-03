@@ -217,14 +217,6 @@ export default function Home() {
               transition={{ duration: 0.3 }}
             >
               <motion.div
-                style={{
-                  width: 120, height: 120,
-                  borderRadius: "50%",
-                  background: "radial-gradient(circle at 38% 32%, #2a0000, #0A0A0A 80%)",
-                  border: "1px solid rgba(192,0,0,0.3)",
-                  boxShadow: "0 0 30px rgba(192,0,0,0.15)",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                }}
                 animate={{ scale: [1, 1.03, 1] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
               >
@@ -259,20 +251,22 @@ export default function Home() {
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.3 }}
             >
-              <svg width="120" height="120" viewBox="0 0 100 100" fill="none">
-                <defs>
-                  <radialGradient id="orbGradientListen" cx="38%" cy="32%">
-                    <stop offset="0%" stopColor="#FF6B9D"/>
-                    <stop offset="25%" stopColor="#E94A7C"/>
-                    <stop offset="40%" stopColor="#D45A9F"/>
-                    <stop offset="55%" stopColor="#9B6BA8"/>
-                    <stop offset="70%" stopColor="#6B7FBA"/>
-                    <stop offset="85%" stopColor="#FF9D3D"/>
-                    <stop offset="100%" stopColor="#FFB84D"/>
-                  </radialGradient>
-                </defs>
-                <circle cx="50" cy="50" r="48" fill="url(#orbGradientListen)" style={{filter:"drop-shadow(0 0 30px rgba(255, 107, 157, 0.8))"}}/>
-              </svg>
+              <motion.div animate={{ scale: [1, 1.05, 1] }} transition={{ duration: 2, repeat: Infinity }}>
+                <svg width="120" height="120" viewBox="0 0 100 100" fill="none">
+                  <defs>
+                    <radialGradient id="orbGradientListen" cx="38%" cy="32%">
+                      <stop offset="0%" stopColor="#FF6B9D"/>
+                      <stop offset="25%" stopColor="#E94A7C"/>
+                      <stop offset="40%" stopColor="#D45A9F"/>
+                      <stop offset="55%" stopColor="#9B6BA8"/>
+                      <stop offset="70%" stopColor="#6B7FBA"/>
+                      <stop offset="85%" stopColor="#FF9D3D"/>
+                      <stop offset="100%" stopColor="#FFB84D"/>
+                    </radialGradient>
+                  </defs>
+                  <circle cx="50" cy="50" r="48" fill="url(#orbGradientListen)" style={{filter:"drop-shadow(0 0 30px rgba(255, 107, 157, 0.8))"}}/>
+                </svg>
+              </motion.div>
               {/* Transcrição em tempo real */}
               <AnimatePresence>
                 {subtitle && (
