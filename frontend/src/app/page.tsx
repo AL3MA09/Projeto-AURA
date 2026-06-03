@@ -220,7 +220,7 @@ export default function Home() {
                 animate={{ scale: [1, 1.03, 1] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
               >
-                <svg width="88" height="88" viewBox="0 0 100 100" fill="none">
+                <svg width="160" height="160" viewBox="0 0 100 100" fill="none">
                   <defs>
                     <radialGradient id="orbGradientIdle" cx="38%" cy="32%">
                       <stop offset="0%" stopColor="#FF6B9D"/>
@@ -232,7 +232,7 @@ export default function Home() {
                       <stop offset="100%" stopColor="#FFB84D"/>
                     </radialGradient>
                   </defs>
-                  <circle cx="50" cy="50" r="48" fill="url(#orbGradientIdle)" style={{filter:"drop-shadow(0 0 20px rgba(255, 107, 157, 0.6))"}}/>
+                  <circle cx="50" cy="50" r="42" fill="url(#orbGradientIdle)" style={{filter:"drop-shadow(0 0 20px rgba(255, 107, 157, 0.6))"}}/>
                 </svg>
               </motion.div>
               <p style={{ color: "rgba(255,255,255,0.25)", fontSize: 11, letterSpacing: "0.2em" }}>
@@ -252,7 +252,7 @@ export default function Home() {
               transition={{ duration: 0.3 }}
             >
               <motion.div animate={{ scale: [1, 1.05, 1] }} transition={{ duration: 2, repeat: Infinity }}>
-                <svg width="120" height="120" viewBox="0 0 100 100" fill="none">
+                <svg width="160" height="160" viewBox="0 0 100 100" fill="none">
                   <defs>
                     <radialGradient id="orbGradientListen" cx="38%" cy="32%">
                       <stop offset="0%" stopColor="#FF6B9D"/>
@@ -264,7 +264,7 @@ export default function Home() {
                       <stop offset="100%" stopColor="#FFB84D"/>
                     </radialGradient>
                   </defs>
-                  <circle cx="50" cy="50" r="48" fill="url(#orbGradientListen)" style={{filter:"drop-shadow(0 0 30px rgba(255, 107, 157, 0.8))"}}/>
+                  <circle cx="50" cy="50" r="42" fill="url(#orbGradientListen)" style={{filter:"drop-shadow(0 0 30px rgba(255, 107, 157, 0.8))"}}/>
                 </svg>
               </motion.div>
               {/* Transcrição em tempo real */}
