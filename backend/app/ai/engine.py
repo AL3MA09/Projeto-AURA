@@ -17,7 +17,11 @@ from loguru import logger
 
 class AuraEngine:
     def __init__(self):
-        self._openai = AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
+        self._openai = AsyncOpenAI(
+            api_key=settings.GROQ_API_KEY or settings.OPENAI_API_KEY,
+            base_url="https://api.groq.com/openai/v1" if settings.GROQ_API_KEY else None,
+        )
+        self._model = settings.GROQ_MODEL if settings.GROQ_API_KEY else settings.OPENAI_MODEL
         self._anthropic = AsyncAnthropic(api_key=settings.ANTHROPIC_API_KEY)
         self._flows = FlowHandler()
 
@@ -91,7 +95,7 @@ class AuraEngine:
 
         full_response = ""
         stream = await self._openai.chat.completions.create(
-            model=settings.OPENAI_MODEL,
+            model=self._model,
             messages=messages,
             temperature=0.7,
             max_tokens=800,
@@ -124,7 +128,7 @@ class AuraEngine:
 
         try:
             response = await self._openai.chat.completions.create(
-                model=settings.OPENAI_MODEL,
+                model=self._model,
                 messages=[
                     {"role": "system", "content": system},
                     {"role": "user", "content": user_message},
