@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     "Tire dúvidas, solicite documentos e gerencie sua vida acadêmica com facilidade.",
   keywords: ["FATEC", "Zona Sul", "assistente virtual", "secretaria acadêmica", "IA universitária"],
   authors: [{ name: "FATEC Zona Sul" }],
-  themeColor: "#0f0f1a",
+  themeColor: "#0A0A0A",
   viewport: "width=device-width, initial-scale=1",
   icons: {
     icon: "/favicon.ico",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR" className="dark">
-      <body className="min-h-screen bg-gray-950 text-white antialiased">
+      <body className="min-h-screen text-white antialiased" style={{ backgroundColor: "#0A0A0A" }}>
         {children}
         <Toaster
           position="top-center"
