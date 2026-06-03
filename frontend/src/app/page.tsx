@@ -1,82 +1,41 @@
 "use client";
 import { useState, useCallback, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Mic, Square, Wifi } from "lucide-react";
+import { Mic, Square, X } from "lucide-react";
 import { sendMessage } from "@/lib/api";
 import { v4 as uuidv4 } from "uuid";
 
 type VoiceState = "idle" | "listening" | "thinking" | "speaking";
 
-// Predefined bar heights for the equalizer
-const BAR_HEIGHTS_ACTIVE = [
-  14, 28, 42, 56, 70, 52, 38, 60, 44, 72,
-  58, 36, 66, 48, 30, 62, 46, 34, 54, 26,
-];
-const BAR_HEIGHTS_IDLE = [
-  6, 8, 6, 8, 6, 8, 6, 8, 6, 8,
-  6, 8, 6, 8, 6, 8, 6, 8, 6, 8,
+// Blob border-radius variants para morfose
+const BLOB_SHAPES = [
+  "60% 40% 30% 70% / 60% 30% 70% 40%",
+  "30% 60% 70% 40% / 50% 60% 30% 60%",
+  "50% 40% 60% 30% / 40% 60% 40% 70%",
+  "40% 60% 40% 60% / 60% 40% 60% 40%",
+  "60% 40% 30% 70% / 60% 30% 70% 40%",
 ];
 
-const STATUS_LABEL: Record<VoiceState, string> = {
-  idle:      "TOQUE PARA FALAR",
-  listening: "OUVINDO...",
-  thinking:  "PROCESSANDO...",
-  speaking:  "RESPONDENDO",
-};
-
-const ORB_CLASS: Record<VoiceState, string> = {
-  idle:      "orb-idle",
-  listening: "orb-listening",
-  thinking:  "orb-thinking",
-  speaking:  "orb-speaking",
-};
+// Alturas das pílulas para animação de fala
+const PILL_DELAYS = [0, 0.15, 0.08, 0.22];
+const PILL_DURATIONS = [0.5, 0.65, 0.45, 0.7];
 
 export default function Home() {
   const [state, setState]       = useState<VoiceState>("idle");
   const [subtitle, setSubtitle] = useState("");
   const [sessionId]             = useState(() => uuidv4());
-  const [barHeights, setBarHeights] = useState(BAR_HEIGHTS_IDLE);
   const transcriptRef           = useRef("");
   const recognitionRef          = useRef<SpeechRecognition | null>(null);
-  const barIntervalRef          = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  // Animate bars based on state
-  useEffect(() => {
-    if (barIntervalRef.current) clearInterval(barIntervalRef.current);
-
-    if (state === "listening" || state === "speaking") {
-      barIntervalRef.current = setInterval(() => {
-        setBarHeights(BAR_HEIGHTS_ACTIVE.map(h =>
-          Math.max(6, h + (Math.random() - 0.5) * 30)
-        ));
-      }, 120);
-    } else if (state === "thinking") {
-      barIntervalRef.current = setInterval(() => {
-        setBarHeights(prev => prev.map((_, i) => {
-          const wave = Math.sin(Date.now() / 200 + i * 0.5) * 20 + 24;
-          return Math.max(6, wave);
-        }));
-      }, 60);
-    } else {
-      setBarHeights(BAR_HEIGHTS_IDLE);
-    }
-
-    return () => { if (barIntervalRef.current) clearInterval(barIntervalRef.current); };
-  }, [state]);
 
   const speak = useCallback((text: string) => {
     window.speechSynthesis.cancel();
     setState("speaking");
     setSubtitle(text);
-
-    const utter  = new SpeechSynthesisUtterance(text);
-    utter.lang   = "pt-BR";
-    utter.rate   = 1.0;
-    utter.pitch  = 1.05;
-
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang  = "pt-BR";
+    utter.rate  = 1.0;
     const ptVoice = window.speechSynthesis.getVoices().find(v => v.lang.startsWith("pt"));
     if (ptVoice) utter.voice = ptVoice;
-
     utter.onend = () => { setState("idle"); setSubtitle(""); };
     window.speechSynthesis.speak(utter);
   }, []);
@@ -97,6 +56,13 @@ export default function Home() {
     const SpeechRec = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (!SpeechRec) {
       setSubtitle("Use o Google Chrome para reconhecimento de voz.");
+      return;
+    }
+
+    try {
+      await navigator.mediaDevices.getUserMedia({ audio: true });
+    } catch {
+      setSubtitle("Permissão do microfone negada. Permita o acesso nas configurações do navegador.");
       return;
     }
 
@@ -131,13 +97,9 @@ export default function Home() {
 
     rec.onerror = (e: Event) => {
       const err = (e as any).error;
-      if (err === "not-allowed") {
-        setSubtitle("Permissão negada. Clique no cadeado e permita o microfone.");
-      } else if (err === "no-speech") {
-        setSubtitle("Nenhuma fala detectada.");
-      } else {
-        setSubtitle("Erro: " + err);
-      }
+      if (err === "not-allowed") setSubtitle("Permissão do microfone negada.");
+      else if (err === "no-speech") setSubtitle("Nenhuma fala detectada. Tente novamente.");
+      else setSubtitle("Erro: " + err);
       setState("idle");
     };
 
@@ -145,249 +107,333 @@ export default function Home() {
     rec.start();
   }, [state, sessionId, speak]);
 
-  const isActive = state === "listening" || state === "speaking";
+  const handleCancel = useCallback(() => {
+    window.speechSynthesis.cancel();
+    recognitionRef.current?.stop();
+    setState("idle");
+    setSubtitle("");
+  }, []);
 
   return (
     <div
-      className="relative flex flex-col items-center justify-between h-screen overflow-hidden bg-grid"
+      className="relative flex flex-col items-center justify-between h-screen overflow-hidden select-none"
       style={{ backgroundColor: "#0A0A0A" }}
     >
-      {/* Background radial glow */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: "radial-gradient(ellipse 60% 50% at 50% 50%, rgba(192,0,0,0.07) 0%, transparent 70%)",
-        }}
-      />
-
-      {/* Corner decorations */}
-      <div className="absolute top-6 left-6 w-8 h-8 corner-tl" />
-      <div className="absolute top-6 right-6 w-8 h-8 corner-tr" />
-      <div className="absolute bottom-6 left-6 w-8 h-8 corner-bl" />
-      <div className="absolute bottom-6 right-6 w-8 h-8 corner-br" />
-
-      {/* Header */}
-      <div className="relative z-10 pt-12 flex flex-col items-center gap-2">
-        <div className="flex items-center gap-3">
-          <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#C00000", boxShadow: "0 0 8px #C00000" }} />
-          <h1
-            className="text-3xl font-bold tracking-[0.3em] text-white"
-            style={{ fontFamily: "'Orbitron', sans-serif" }}
-          >
-            AURA
-          </h1>
-          <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#C00000", boxShadow: "0 0 8px #C00000" }} />
-        </div>
-        <p className="text-xs tracking-[0.2em] uppercase" style={{ color: "rgba(255,255,255,0.3)" }}>
-          Assistente Universitária · FATEC Zona Sul
-        </p>
-        {/* Status indicator */}
-        <div className="flex items-center gap-2 mt-1">
+      {/* Header — só aparece em idle/listening */}
+      <AnimatePresence>
+        {(state === "idle" || state === "listening") && (
           <motion.div
-            style={{ width: 5, height: 5, borderRadius: "50%", background: "#C00000" }}
-            animate={{ opacity: [1, 0.3, 1], boxShadow: ["0 0 4px #C00000", "0 0 12px #C00000", "0 0 4px #C00000"] }}
-            transition={{ duration: 2, repeat: Infinity }}
-          />
-          <span className="text-xs tracking-widest" style={{ color: "rgba(192,0,0,0.7)" }}>ONLINE</span>
-        </div>
-      </div>
+            className="pt-14 flex flex-col items-center gap-1 z-10"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+          >
+            <h1
+              className="text-xl font-semibold tracking-[0.25em] text-white"
+              style={{ fontFamily: "'Orbitron', sans-serif", letterSpacing: "0.3em" }}
+            >
+              AURA
+            </h1>
+            <p className="text-xs tracking-widest" style={{ color: "rgba(255,255,255,0.25)" }}>
+              FATEC ZONA SUL
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      {/* Main orb + visualizer */}
-      <div className="relative z-10 flex flex-col items-center gap-8">
+      {/* ── CENTRO: elemento visual por estado ── */}
+      <div className="flex-1 flex flex-col items-center justify-center gap-6 w-full px-8">
 
-        {/* Orb */}
-        <div className="relative flex items-center justify-center" style={{ width: 280, height: 280 }}>
-
-          {/* Outer pulse rings */}
-          <AnimatePresence>
-            {isActive && [0, 1, 2].map(i => (
-              <motion.div
-                key={i}
-                className="absolute"
-                style={{
-                  width: 220, height: 220,
-                  borderRadius: "50%",
-                  border: "1px solid rgba(192,0,0,0.3)",
-                }}
-                initial={{ width: 220, height: 220, opacity: 0.6 }}
-                animate={{ width: 340 + i * 60, height: 340 + i * 60, opacity: 0 }}
-                transition={{ duration: 2.5, repeat: Infinity, delay: i * 0.6, ease: "easeOut" }}
-              />
-            ))}
-          </AnimatePresence>
-
-          {/* Orbit ring for thinking */}
-          {state === "thinking" && (
+        {/* IDLE — orb simples */}
+        <AnimatePresence mode="wait">
+          {state === "idle" && (
             <motion.div
-              className="absolute"
-              style={{
-                width: 240, height: 240,
-                borderRadius: "50%",
-                border: "1px dashed rgba(192,0,0,0.4)",
-              }}
-              animate={{ rotate: 360 }}
-              transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-            />
+              key="idle"
+              className="flex flex-col items-center gap-6"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.3 }}
+            >
+              <motion.div
+                style={{
+                  width: 120, height: 120,
+                  borderRadius: "50%",
+                  background: "radial-gradient(circle at 38% 32%, #2a0000, #0A0A0A 80%)",
+                  border: "1px solid rgba(192,0,0,0.3)",
+                  boxShadow: "0 0 30px rgba(192,0,0,0.15)",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                }}
+                animate={{ scale: [1, 1.03, 1] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <span style={{
+                  color: "rgba(192,0,0,0.8)",
+                  fontSize: 32, fontWeight: 700,
+                  fontFamily: "'Orbitron', sans-serif",
+                  textShadow: "0 0 16px rgba(192,0,0,0.5)",
+                }}>A</span>
+              </motion.div>
+              <p style={{ color: "rgba(255,255,255,0.25)", fontSize: 11, letterSpacing: "0.2em" }}>
+                TOQUE PARA FALAR
+              </p>
+            </motion.div>
           )}
 
-          {/* Main orb */}
-          <motion.div
-            className={`relative flex items-center justify-center cursor-pointer ${ORB_CLASS[state]}`}
-            style={{ width: 200, height: 200, borderRadius: "50%" }}
-            animate={
-              state === "thinking"
-                ? { scale: [1, 1.04, 1] }
-                : state === "speaking"
-                ? { scale: [1, 1.07, 1, 1.05, 1] }
-                : state === "listening"
-                ? { scale: [1, 1.06, 1] }
-                : { scale: [1, 1.015, 1] }
-            }
-            transition={{
-              duration: state === "idle" ? 4 : state === "thinking" ? 1.5 : 0.6,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-            onClick={handlePress}
-          >
-            {/* Inner shine */}
-            <div style={{
-              position: "absolute", top: 28, left: 36,
-              width: 44, height: 44,
-              borderRadius: "50%",
-              background: "rgba(255,255,255,0.06)",
-              filter: "blur(12px)",
-            }} />
-            {/* Inner ring */}
-            <div style={{
-              position: "absolute",
-              width: 150, height: 150,
-              borderRadius: "50%",
-              border: "1px solid rgba(192,0,0,0.2)",
-            }} />
-
-            {/* Letter A */}
-            <span
-              className="relative z-10 text-white font-bold"
-              style={{
-                fontFamily: "'Orbitron', sans-serif",
-                fontSize: 42,
-                textShadow: "0 0 20px rgba(192,0,0,0.8), 0 0 40px rgba(192,0,0,0.4)",
-                letterSpacing: 2,
-              }}
-            >
-              A
-            </span>
-
-            {/* Bottom red line inside orb */}
-            <div style={{
-              position: "absolute", bottom: 36, left: "50%",
-              transform: "translateX(-50%)",
-              width: 40, height: 1,
-              background: "linear-gradient(90deg, transparent, #C00000, transparent)",
-            }} />
-          </motion.div>
-        </div>
-
-        {/* Equalizer bars */}
-        <div className="flex items-end justify-center gap-[3px]" style={{ height: 80 }}>
-          {barHeights.map((h, i) => (
+          {/* LISTENING — orb quieto + transcrição */}
+          {state === "listening" && (
             <motion.div
-              key={i}
-              className="eq-bar"
-              animate={{ height: h }}
-              transition={{ duration: 0.15, ease: "easeInOut" }}
-            />
-          ))}
-        </div>
+              key="listening"
+              className="flex flex-col items-center gap-6"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div style={{
+                width: 120, height: 120,
+                borderRadius: "50%",
+                background: "radial-gradient(circle at 38% 32%, #200000, #0A0A0A 80%)",
+                border: "1px solid rgba(192,0,0,0.2)",
+                boxShadow: "0 0 20px rgba(192,0,0,0.08)",
+                display: "flex", alignItems: "center", justifyContent: "center",
+              }}>
+                <span style={{
+                  color: "rgba(192,0,0,0.5)",
+                  fontSize: 32, fontWeight: 700,
+                  fontFamily: "'Orbitron', sans-serif",
+                }}>A</span>
+              </div>
+              {/* Transcrição em tempo real */}
+              <AnimatePresence>
+                {subtitle && (
+                  <motion.p
+                    key={subtitle}
+                    initial={{ opacity: 0, y: 4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    style={{
+                      color: "rgba(255,255,255,0.5)",
+                      fontSize: 14,
+                      textAlign: "center",
+                      maxWidth: 280,
+                      lineHeight: 1.6,
+                    }}
+                  >
+                    {subtitle}
+                  </motion.p>
+                )}
+              </AnimatePresence>
+              {!subtitle && (
+                <p style={{ color: "rgba(255,255,255,0.2)", fontSize: 11, letterSpacing: "0.2em" }}>
+                  OUVINDO...
+                </p>
+              )}
+            </motion.div>
+          )}
 
-        {/* Status + subtitle */}
-        <div className="flex flex-col items-center gap-3 min-h-[64px] px-8 text-center">
-          <motion.p
-            key={state}
-            initial={{ opacity: 0, y: 4 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-xs font-semibold tracking-[0.25em]"
-            style={{
-              fontFamily: "'Orbitron', sans-serif",
-              color: state === "idle" ? "rgba(255,255,255,0.3)" : "#C00000",
-            }}
-          >
-            {STATUS_LABEL[state]}
-          </motion.p>
+          {/* THINKING — blob de pensamento */}
+          {state === "thinking" && (
+            <motion.div
+              key="thinking"
+              className="flex flex-col items-center justify-center"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.4 }}
+              style={{ position: "relative", width: 300, height: 300 }}
+            >
+              {/* Blob principal */}
+              <motion.div
+                style={{
+                  position: "absolute",
+                  width: 220, height: 200,
+                  background: "#FFFFFF",
+                  top: 20, left: "50%", x: "-50%",
+                }}
+                animate={{
+                  borderRadius: BLOB_SHAPES,
+                  scale: [1, 1.04, 0.98, 1.03, 1],
+                  x: ["-50%", "-48%", "-52%", "-50%"],
+                  y: [0, -6, 4, -3, 0],
+                }}
+                transition={{
+                  borderRadius: { duration: 6, repeat: Infinity, ease: "easeInOut" },
+                  scale: { duration: 5, repeat: Infinity, ease: "easeInOut" },
+                  x: { duration: 4, repeat: Infinity, ease: "easeInOut" },
+                  y: { duration: 3.5, repeat: Infinity, ease: "easeInOut" },
+                }}
+              />
 
-          <AnimatePresence mode="wait">
-            {subtitle && (
-              <motion.p
-                key={subtitle.slice(0, 20)}
-                initial={{ opacity: 0, y: 4 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                className="text-sm max-w-xs leading-relaxed"
-                style={{ color: "rgba(255,255,255,0.55)" }}
-              >
-                {subtitle.length > 100 ? subtitle.slice(0, 100) + "…" : subtitle}
-              </motion.p>
-            )}
-          </AnimatePresence>
-        </div>
+              {/* Bolinha pequena do balão */}
+              <motion.div
+                style={{
+                  position: "absolute",
+                  width: 28, height: 28,
+                  borderRadius: "50%",
+                  background: "#FFFFFF",
+                  bottom: 52, left: "35%",
+                }}
+                animate={{
+                  scale: [1, 1.1, 0.95, 1.05, 1],
+                  x: [0, -4, 2, -2, 0],
+                  y: [0, 3, -2, 2, 0],
+                }}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              />
+
+              {/* Bolinha menor */}
+              <motion.div
+                style={{
+                  position: "absolute",
+                  width: 14, height: 14,
+                  borderRadius: "50%",
+                  background: "#FFFFFF",
+                  bottom: 28, left: "28%",
+                }}
+                animate={{
+                  scale: [1, 1.15, 0.9, 1.1, 1],
+                  x: [0, -3, 1, -1, 0],
+                  y: [0, 2, -2, 1, 0],
+                }}
+                transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
+              />
+            </motion.div>
+          )}
+
+          {/* SPEAKING — pílulas animadas estilo ChatGPT */}
+          {state === "speaking" && (
+            <motion.div
+              key="speaking"
+              className="flex flex-col items-center gap-10"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              {/* 4 pílulas */}
+              <div className="flex items-center justify-center gap-3">
+                {PILL_DELAYS.map((delay, i) => (
+                  <motion.div
+                    key={i}
+                    style={{
+                      width: 52, height: 52,
+                      borderRadius: 26,
+                      background: "#FFFFFF",
+                    }}
+                    animate={{
+                      scaleY: [1, 0.35, 1.2, 0.5, 1],
+                      scaleX: [1, 1.1, 0.9, 1.05, 1],
+                    }}
+                    transition={{
+                      duration: PILL_DURATIONS[i],
+                      repeat: Infinity,
+                      delay,
+                      ease: "easeInOut",
+                    }}
+                  />
+                ))}
+              </div>
+
+              {/* Texto da resposta */}
+              <AnimatePresence>
+                {subtitle && (
+                  <motion.p
+                    key="resp"
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    style={{
+                      color: "rgba(255,255,255,0.45)",
+                      fontSize: 13,
+                      textAlign: "center",
+                      maxWidth: 280,
+                      lineHeight: 1.7,
+                    }}
+                  >
+                    {subtitle.length > 120 ? subtitle.slice(0, 120) + "…" : subtitle}
+                  </motion.p>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
-      {/* Mic button */}
-      <div className="relative z-10 pb-14 flex flex-col items-center gap-3">
-        {/* Decorative line */}
-        <div style={{
-          width: 60, height: 1,
-          background: "linear-gradient(90deg, transparent, rgba(192,0,0,0.4), transparent)",
-          marginBottom: 8,
-        }} />
+      {/* ── RODAPÉ: botões ── */}
+      <div className="pb-14 flex items-center gap-12 z-10">
 
+        {/* Botão microfone */}
         <motion.button
           onClick={handlePress}
           disabled={state === "thinking"}
-          className="relative flex items-center justify-center"
           style={{
-            width: 64, height: 64,
+            width: 56, height: 56,
             borderRadius: "50%",
-            background: state === "thinking"
-              ? "rgba(192,0,0,0.2)"
-              : "rgba(192,0,0,0.15)",
-            border: `1px solid ${state === "idle" ? "rgba(192,0,0,0.4)" : "#C00000"}`,
-            boxShadow: state !== "idle" && state !== "thinking"
-              ? "0 0 20px rgba(192,0,0,0.5), 0 0 40px rgba(192,0,0,0.2)"
-              : "0 0 10px rgba(192,0,0,0.2)",
+            background: "transparent",
+            border: "1px solid rgba(255,255,255,0.15)",
+            display: "flex", alignItems: "center", justifyContent: "center",
             cursor: state === "thinking" ? "default" : "pointer",
+            opacity: state === "thinking" ? 0.3 : 1,
           }}
-          whileTap={state !== "thinking" ? { scale: 0.9 } : {}}
-          whileHover={state !== "thinking" ? { scale: 1.08 } : {}}
+          whileTap={state !== "thinking" ? { scale: 0.88 } : {}}
+          whileHover={state !== "thinking" ? { borderColor: "rgba(255,255,255,0.4)" } : {}}
         >
-          {/* Button glow ring */}
-          {isActive && (
-            <motion.div
-              className="absolute inset-0"
-              style={{ borderRadius: "50%", border: "1px solid rgba(192,0,0,0.6)" }}
-              animate={{ scale: [1, 1.4], opacity: [0.6, 0] }}
-              transition={{ duration: 1.2, repeat: Infinity }}
-            />
-          )}
-
           {state === "idle" || state === "thinking"
-            ? <Mic size={24} color={state === "thinking" ? "rgba(192,0,0,0.4)" : "#C00000"} />
-            : <Square size={20} color="#C00000" fill="#C00000" />
+            ? <Mic size={22} color="rgba(255,255,255,0.7)" />
+            : <Square size={18} color="rgba(255,255,255,0.7)" fill="rgba(255,255,255,0.7)" />
           }
         </motion.button>
 
-        <p
-          className="text-xs tracking-widest uppercase"
-          style={{ color: "rgba(255,255,255,0.2)" }}
-        >
-          {state === "idle"      && "Pressione para falar"}
-          {state === "listening" && "Pressione para parar"}
-          {state === "thinking"  && "Aguarde..."}
-          {state === "speaking"  && "Pressione para interromper"}
-        </p>
+        {/* Botão cancelar (vermelho) — só aparece quando ativo */}
+        <AnimatePresence>
+          {state !== "idle" && (
+            <motion.button
+              onClick={handleCancel}
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              style={{
+                width: 56, height: 56,
+                borderRadius: "50%",
+                background: "#C00000",
+                border: "none",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                cursor: "pointer",
+                boxShadow: "0 0 20px rgba(192,0,0,0.4)",
+              }}
+              whileTap={{ scale: 0.88 }}
+            >
+              <X size={20} color="white" />
+            </motion.button>
+          )}
+        </AnimatePresence>
       </div>
 
+      {/* Mensagem de erro/status */}
+      <AnimatePresence>
+        {subtitle && state === "idle" && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            style={{
+              position: "absolute",
+              bottom: 100,
+              left: "50%", transform: "translateX(-50%)",
+              background: "rgba(192,0,0,0.15)",
+              border: "1px solid rgba(192,0,0,0.3)",
+              borderRadius: 12,
+              padding: "10px 20px",
+              maxWidth: 300,
+              textAlign: "center",
+              fontSize: 12,
+              color: "rgba(255,255,255,0.6)",
+            }}
+          >
+            {subtitle}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
