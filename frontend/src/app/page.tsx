@@ -48,6 +48,7 @@ export default function Home() {
       return;
     }
     if (state === "listening") {
+      // Para a gravação e processa o texto capturado
       recognitionRef.current?.stop();
       return;
     }
@@ -72,7 +73,7 @@ export default function Home() {
 
     const rec: SpeechRecognition = new SpeechRec();
     rec.lang           = "pt-BR";
-    rec.continuous     = false;
+    rec.continuous     = true;
     rec.interimResults = true;
 
     rec.onresult = (e: SpeechRecognitionEvent) => {
@@ -81,6 +82,7 @@ export default function Home() {
       setSubtitle(transcriptRef.current);
     };
 
+    // Com continuous=true, onend só dispara quando rec.stop() é chamado
     rec.onend = async () => {
       const text = transcriptRef.current.trim();
       if (!text) { setState("idle"); setSubtitle(""); return; }
@@ -225,7 +227,7 @@ export default function Home() {
               </AnimatePresence>
               {!subtitle && (
                 <p style={{ color: "rgba(255,255,255,0.2)", fontSize: 11, letterSpacing: "0.2em" }}>
-                  OUVINDO...
+                  FALE AGORA · TOQUE NOVAMENTE PARA ENVIAR
                 </p>
               )}
             </motion.div>
