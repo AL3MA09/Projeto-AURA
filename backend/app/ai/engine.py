@@ -90,16 +90,17 @@ class AuraEngine:
         ]
 
         full_response = ""
-        async with self._openai.chat.completions.stream(
+        stream = await self._openai.chat.completions.create(
             model=settings.OPENAI_MODEL,
             messages=messages,
             temperature=0.7,
             max_tokens=800,
-        ) as stream:
-            async for chunk in stream:
-                delta = chunk.choices[0].delta.content or ""
-                full_response += delta
-                yield delta
+            stream=True,
+        )
+        async for chunk in stream:
+            delta = chunk.choices[0].delta.content or ""
+            full_response += delta
+            yield delta
 
         await memory.add_message(session_id, "user", user_message)
         await memory.add_message(session_id, "assistant", full_response)
