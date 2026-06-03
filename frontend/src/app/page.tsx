@@ -26,6 +26,11 @@ export default function Home() {
   const [sessionId]             = useState(() => uuidv4());
   const transcriptRef           = useRef("");
   const recognitionRef          = useRef<SpeechRecognition | null>(null);
+  const stateRef                = useRef<VoiceState>("idle");
+  const intentionalStopRef      = useRef(false);
+
+  // Mantém stateRef sincronizado
+  useEffect(() => { stateRef.current = state; }, [state]);
 
   const speak = useCallback((text: string) => {
     window.speechSynthesis.cancel();
@@ -48,7 +53,7 @@ export default function Home() {
       return;
     }
     if (state === "listening") {
-      // Para a gravação e processa o texto capturado
+      intentionalStopRef.current = true;
       recognitionRef.current?.stop();
       return;
     }
@@ -60,56 +65,62 @@ export default function Home() {
       return;
     }
 
-    try {
-      await navigator.mediaDevices.getUserMedia({ audio: true });
-    } catch {
-      setSubtitle("Permissão do microfone negada. Permita o acesso nas configurações do navegador.");
-      return;
-    }
-
+    intentionalStopRef.current = false;
     transcriptRef.current = "";
     setState("listening");
     setSubtitle("");
 
-    const rec: SpeechRecognition = new SpeechRec();
-    rec.lang           = "pt-BR";
-    rec.continuous     = true;
-    rec.interimResults = true;
+    const startRec = () => {
+      const rec: SpeechRecognition = new SpeechRec();
+      rec.lang           = "pt-BR";
+      rec.continuous     = true;
+      rec.interimResults = true;
 
-    rec.onresult = (e: SpeechRecognitionEvent) => {
-      transcriptRef.current = Array.from(e.results)
-        .map(r => r[0].transcript).join("");
-      setSubtitle(transcriptRef.current);
+      rec.onresult = (e: SpeechRecognitionEvent) => {
+        transcriptRef.current = Array.from(e.results)
+          .map(r => r[0].transcript).join("");
+        setSubtitle(transcriptRef.current);
+      };
+
+      rec.onend = async () => {
+        // Se ainda estamos ouvindo e o stop não foi intencional, reinicia automaticamente
+        if (stateRef.current === "listening" && !intentionalStopRef.current) {
+          try { startRec(); } catch {}
+          return;
+        }
+        // Stop intencional: processa o texto
+        const text = transcriptRef.current.trim();
+        if (!text) { setState("idle"); setSubtitle(""); return; }
+        setState("thinking");
+        setSubtitle("");
+        try {
+          const res = await sendMessage(text, sessionId);
+          speak(res.message);
+        } catch {
+          setState("idle");
+          setSubtitle("Erro de conexão. Tente novamente.");
+        }
+      };
+
+      rec.onerror = (e: Event) => {
+        const err = (e as any).error;
+        if (err === "not-allowed") {
+          setSubtitle("Permissão do microfone negada. Clique no cadeado e permita o microfone.");
+          setState("idle");
+          intentionalStopRef.current = true;
+        }
+        // outros erros: deixa o onend reiniciar automaticamente
+      };
+
+      recognitionRef.current = rec;
+      rec.start();
     };
 
-    // Com continuous=true, onend só dispara quando rec.stop() é chamado
-    rec.onend = async () => {
-      const text = transcriptRef.current.trim();
-      if (!text) { setState("idle"); setSubtitle(""); return; }
-      setState("thinking");
-      setSubtitle("");
-      try {
-        const res = await sendMessage(text, sessionId);
-        speak(res.message);
-      } catch {
-        setState("idle");
-        setSubtitle("Erro de conexão. Tente novamente.");
-      }
-    };
-
-    rec.onerror = (e: Event) => {
-      const err = (e as any).error;
-      if (err === "not-allowed") setSubtitle("Permissão do microfone negada.");
-      else if (err === "no-speech") setSubtitle("Nenhuma fala detectada. Tente novamente.");
-      else setSubtitle("Erro: " + err);
-      setState("idle");
-    };
-
-    recognitionRef.current = rec;
-    rec.start();
+    startRec();
   }, [state, sessionId, speak]);
 
   const handleCancel = useCallback(() => {
+    intentionalStopRef.current = true;
     window.speechSynthesis.cancel();
     recognitionRef.current?.stop();
     setState("idle");
