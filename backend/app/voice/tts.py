@@ -53,15 +53,16 @@ class AuraTTS:
         if not settings.ELEVENLABS_API_KEY:
             return None
         try:
-            audio_generator = await self._eleven.generate(
+            audio_stream = self._eleven.text_to_speech.convert(
+                voice_id=settings.ELEVENLABS_VOICE_ID,
                 text=text,
-                voice=settings.ELEVENLABS_VOICE_ID,
-                model=settings.ELEVENLABS_MODEL_ID,
+                model_id=settings.ELEVENLABS_MODEL_ID,
                 output_format="mp3_44100_128",
             )
             chunks = []
-            async for chunk in audio_generator:
-                chunks.append(chunk)
+            async for chunk in audio_stream:
+                if chunk:
+                    chunks.append(chunk)
             audio = b"".join(chunks)
             logger.debug(f"ElevenLabs TTS: {len(text)} chars → {len(audio)} bytes")
             return audio
