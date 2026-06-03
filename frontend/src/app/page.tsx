@@ -28,6 +28,7 @@ export default function Home() {
   const recognitionRef          = useRef<SpeechRecognition | null>(null);
   const stateRef                = useRef<VoiceState>("idle");
   const intentionalStopRef      = useRef(false);
+  const audioCtxRef             = useRef<AudioContext | null>(null);
 
   // Mantém stateRef sincronizado
   useEffect(() => { stateRef.current = state; }, [state]);
@@ -79,12 +80,22 @@ export default function Home() {
         }
       );
       if (!response.ok) throw new Error(`${response.status}`);
-      const blob  = await response.blob();
-      const url   = URL.createObjectURL(blob);
-      const audio = new Audio(url);
-      audio.onended = () => { setState("idle"); setSubtitle(""); URL.revokeObjectURL(url); };
-      audio.onerror = () => { speakBrowser(text); URL.revokeObjectURL(url); };
-      await audio.play();
+
+      const arrayBuffer = await response.arrayBuffer();
+
+      // Usa AudioContext para funcionar no mobile (evita bloqueio de autoplay)
+      if (!audioCtxRef.current) {
+        audioCtxRef.current = new AudioContext();
+      }
+      const ctx = audioCtxRef.current;
+      if (ctx.state === "suspended") await ctx.resume();
+
+      const audioBuffer = await ctx.decodeAudioData(arrayBuffer);
+      const source = ctx.createBufferSource();
+      source.buffer = audioBuffer;
+      source.connect(ctx.destination);
+      source.onended = () => { setState("idle"); setSubtitle(""); };
+      source.start(0);
     } catch {
       speakBrowser(text);
     }
@@ -103,6 +114,14 @@ export default function Home() {
       return;
     }
     if (state !== "idle") return;
+
+    // Inicializa/desbloqueia AudioContext no primeiro toque (necessário no mobile)
+    if (!audioCtxRef.current) {
+      audioCtxRef.current = new AudioContext();
+    }
+    if (audioCtxRef.current.state === "suspended") {
+      await audioCtxRef.current.resume();
+    }
 
     const SpeechRec = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (!SpeechRec) {
