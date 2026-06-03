@@ -55,11 +55,39 @@ export default function Home() {
     }
   }, []);
 
-  const speak = useCallback((text: string) => {
+  const speak = useCallback(async (text: string) => {
     window.speechSynthesis.cancel();
     setState("speaking");
     setSubtitle(text);
-    speakBrowser(text);
+
+    const apiKey  = process.env.NEXT_PUBLIC_ELEVENLABS_API_KEY;
+    const voiceId = process.env.NEXT_PUBLIC_ELEVENLABS_VOICE_ID;
+
+    if (!apiKey || !voiceId) { speakBrowser(text); return; }
+
+    try {
+      const response = await fetch(
+        `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`,
+        {
+          method: "POST",
+          headers: { "xi-api-key": apiKey, "Content-Type": "application/json" },
+          body: JSON.stringify({
+            text,
+            model_id: "eleven_multilingual_v2",
+            voice_settings: { stability: 0.5, similarity_boost: 0.75 },
+          }),
+        }
+      );
+      if (!response.ok) throw new Error(`${response.status}`);
+      const blob  = await response.blob();
+      const url   = URL.createObjectURL(blob);
+      const audio = new Audio(url);
+      audio.onended = () => { setState("idle"); setSubtitle(""); URL.revokeObjectURL(url); };
+      audio.onerror = () => { speakBrowser(text); URL.revokeObjectURL(url); };
+      await audio.play();
+    } catch {
+      speakBrowser(text);
+    }
   }, [speakBrowser]);
 
   const handlePress = useCallback(async () => {
