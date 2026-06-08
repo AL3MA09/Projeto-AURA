@@ -220,7 +220,7 @@ export default function Home() {
                 animate={{ scale: [1, 1.03, 1] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
               >
-                <svg width="160" height="160" viewBox="0 0 100 100" fill="none">
+                <svg width="160" height="160" viewBox="0 0 100 100" fill="none" style={{background: 'transparent'}}>
                   <defs>
                     <radialGradient id="orbGradientIdle" cx="38%" cy="32%">
                       <stop offset="0%" stopColor="#FF6B9D"/>
@@ -252,7 +252,7 @@ export default function Home() {
               transition={{ duration: 0.3 }}
             >
               <motion.div animate={{ scale: [1, 1.05, 1] }} transition={{ duration: 2, repeat: Infinity }}>
-                <svg width="160" height="160" viewBox="0 0 100 100" fill="none">
+                <svg width="160" height="160" viewBox="0 0 100 100" fill="none" style={{background: 'transparent'}}>
                   <defs>
                     <radialGradient id="orbGradientListen" cx="38%" cy="32%">
                       <stop offset="0%" stopColor="#FF6B9D"/>
