@@ -12,7 +12,7 @@ A AURA nasceu da necessidade de reduzir a sobrecarga da secretaria acadêmica e 
 
 Em vez de esperar na fila ou ligar no horário comercial, o aluno simplesmente fala com a AURA — que responde com voz feminina natural em português, como se fosse uma atendente real.
 
-Desenvolvido por: Arthur Brilhante & Júlio César Conceição Santos
+Desenvolvido por: Arthur Santos Brilhante & Júlio César Conceição Santos
 Instituição: FATEC Zona Sul
 Curso: Análise e Desenvolvimento de Sistemas
 Demo: https://aura-frontend.onrender.com
