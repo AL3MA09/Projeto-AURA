@@ -152,10 +152,6 @@ git push  # CI/CD automático
 # Start: uvicorn main:app --host 0.0.0.0 --port $PORT
 ```
 
-URLs de Produção:
-- Frontend: https://aura-frontend.onrender.com
-- Backend: https://aura-backend-rj9u.onrender.com
-
 ## 📝 Variáveis de Ambiente
 
 ### Backend (.env)
