@@ -217,7 +217,7 @@ Payback - 2 meses
 
 ##  Contato
 
-- **LinkedIn:** [Arthur Brilhante](https://linkedin.com/in/arthurbrilhante)
+- **LinkedIn:** [Arthur Brilhante](https://www.linkedin.com/in/arthur-brilhante-36475b315/)
 - **Demo ao vivo:** https://aura-frontend.onrender.com
 ---
 
