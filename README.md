@@ -218,7 +218,7 @@ Payback - 2 meses
 ##  Contato
 
 - **LinkedIn:** [Arthur Brilhante](https://www.linkedin.com/in/arthur-brilhante-36475b315/)
-- **Demo ao vivo:** https://aura-frontend.onrender.com
+- **Demo ao vivo:** https://aura-2dw8.onrender.com
 ---
 
 **Desenvolvido para FATEC Zona Sul**
