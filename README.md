@@ -7,54 +7,54 @@
 
 **AURA** é uma assistente virtual inteligente especializada em atendimento acadêmico, disponível 24/7 por voz para responder dúvidas de alunos da FATEC Zona Sul.
 
-## 🎯 Visão Geral
+## Visão Geral
 
 AURA resolve o problema de sobrecarga na secretaria acadêmica fornecendo um canal de atendimento inteligente baseado em IA com:
 
-- ✅ **Interface voice-first** (ChatGPT Voice Mode style)
-- ✅ **Voz feminina natural** em português brasileiro
-- ✅ **10 fluxos acadêmicos estruturados** com simulações
-- ✅ **Base de conhecimento FATEC** integrada e verificada
-- ✅ **Disponibilidade 24/7** sem intervenção humana
-- ✅ **Escalável** para outras unidades FATEC
+- Interface voice-first (ChatGPT Voice Mode style)
+- Voz feminina natural em português brasileiro
+- 10 fluxos acadêmicos estruturados com simulações
+- Base de conhecimento FATEC integrada e verificada
+- Disponibilidade 24/7 sem intervenção humana
+- Escalável para outras unidades FATEC
 
-## 🚀 Funcionalidades
+## Funcionalidades
 
 ### Fluxos Acadêmicos
-1. **Transferência de Curso** - Verificação de vagas e procedimentos
-2. **Cancelamento de Matrícula** - Processo com confirmação de impactos
-3. **Trancamento Semestral** - Prazo e regulamentações
-4. **Aproveitamento de Disciplinas** - Equivalência de cursos anteriores
-5. **Estágio Obrigatório** - Orientação completa do processo
-6. **Consulta de Histórico Escolar** - Status e prazos
-7. **Atestado de Matrícula** - Procedimento e entrega
-8. **Consulta de Professores** - Por disciplina e período
-9. **Disciplinas por Semestre** - Grade completa
-10. **Datas de Avaliações** - Redirecionamento ao professor
+1. Transferência de Curso - Verificação de vagas e procedimentos
+2. Cancelamento de Matrícula - Processo com confirmação de impactos
+3. Trancamento Semestral - Prazo e regulamentações
+4. Aproveitamento de Disciplinas - Equivalência de cursos anteriores
+5. Estágio Obrigatório - Orientação completa do processo
+6. Consulta de Histórico Escolar - Status e prazos
+7. Atestado de Matrícula - Procedimento e entrega
+8. Consulta de Professores - Por disciplina e período
+9. Disciplinas por Semestre - Grade completa
+10. Datas de Avaliações - Redirecionamento ao professor
 
 ### Base de Conhecimento
-- 📚 Professores e disciplinas oficiais (ADS)
-- 📅 Calendário acadêmico 2026
-- 📄 Procedimentos de documentos
-- 👥 Coordenadores e contatos
-- 🎓 Estrutura de estágio
-- 🔄 Políticas de matrícula
+- Professores e disciplinas oficiais (ADS)
+- Calendário acadêmico 2026
+- Procedimentos de documentos
+- Coordenadores e contatos
+- Estrutura de estágio
+- Políticas de matrícula
 
-## 💻 Stack Tecnológico
+## Stack Tecnológico
 
 ### Frontend
-- **Framework:** Next.js 14 (React)
-- **Animações:** Framer Motion
-- **Voice Input:** Web Speech API
-- **Voice Output:** ElevenLabs TTS
-- **Styling:** Tailwind CSS + Poppins Font
+- Framework: Next.js 14 (React)
+- Animações: Framer Motion
+- Voice Input: Web Speech API
+- Voice Output: ElevenLabs TTS
+- Styling: Tailwind CSS + Poppins Font
 
 ### Backend
-- **Framework:** FastAPI (Python)
-- **LLM:** Groq (llama-3.3-70b) + Claude fallback
-- **Banco:** PostgreSQL + Redis (cache)
-- **Vector DB:** ChromaDB (pronto para RAG)
-- **Voice Processing:** ElevenLabs API
+- Framework: FastAPI (Python)
+- LLM: Groq (llama-3.3-70b) + Claude fallback
+- Banco: PostgreSQL + Redis (cache)
+- Vector DB: ChromaDB (pronto para RAG)
+- Voice Processing: ElevenLabs API
 
 ### DevOps
 - **Frontend Deploy:** Render (auto-scaling)
@@ -62,7 +62,7 @@ AURA resolve o problema de sobrecarga na secretaria acadêmica fornecendo um can
 - **CI/CD:** Git push → auto-deploy
 - **Monitoramento:** Render logs
 
-## 📊 Arquitetura
+## Arquitetura
 
 ```
 ┌─────────────────────────────────────────────────────┐
@@ -87,27 +87,15 @@ AURA resolve o problema de sobrecarga na secretaria acadêmica fornecendo um can
     └────────┘           └────────┘
 ```
 
-## 🎯 Performance & Métricas
+## Performance & Métricas
 
-| Métrica | Valor |
-|---------|-------|
-| Tempo de resposta | < 2s (median) |
-| Disponibilidade | 99.9% (uptime) |
-| Requisições/mês | ~30,000 (gratuito Groq) |
-| Taxa de erro | < 0.1% |
-| Satisfação do usuário | N/A (produção recente) |
+Tempo de resposta - < 2s (median) 
+Disponibilidade - 99.9% (uptime) 
+Requisições/mês - ~30,000 (gratuito Groq) 
+Taxa de erro - < 0.1% 
+Satisfação do usuário - N/A (produção recente) 
 
-## 🔐 Segurança
-
-- ✅ Sem credenciais hardcoded
-- ✅ .env ignorado do Git
-- ✅ CORS configurado
-- ✅ Rate limiting habilitado
-- ✅ LGPD compliance (sem armazenar CPF completo)
-- ✅ Logs auditados
-- ✅ Dependências atualizadas
-
-## 📦 Instalação & Setup
+## Instalação & Setup
 
 ### Pré-requisitos
 - Python 3.11+
@@ -187,7 +175,7 @@ NEXT_PUBLIC_ELEVENLABS_API_KEY=<sua-chave>
 NEXT_PUBLIC_ELEVENLABS_VOICE_ID=7iqXtOF3wl3pomwXFY7G
 ```
 
-## 🧪 Testes
+## Testes
 
 ```bash
 # Backend
@@ -199,14 +187,14 @@ cd frontend
 npm run test
 ```
 
-## 📚 Documentação
+## Documentação
 
 - [API Documentation](./docs/API.md) - Endpoints e schemas
 - [Architecture](./docs/ARCHITECTURE.md) - Design detalhado
 - [Flows Documentation](./docs/FLOWS.md) - Lógica dos fluxos
 - [Knowledge Base](./docs/KNOWLEDGE_BASE.md) - Base FATEC
 
-## 🤝 Contribuindo
+##  Contribuindo
 
 1. Fork o projeto
 2. Crie uma branch (`git checkout -b feature/AmazingFeature`)
@@ -214,7 +202,7 @@ npm run test
 4. Push (`git push origin feature/AmazingFeature`)
 5. Abra um Pull Request
 
-## 📊 Roadmap
+## Roadmap
 
 - [ ] Integração com SIGA (sistema acadêmico)
 - [ ] Suporte a outros cursos (GTI, Logística, Marketing)
@@ -224,30 +212,20 @@ npm run test
 - [ ] Integração WhatsApp/Telegram
 - [ ] Suporte multilíngue
 
-## 💰 Investimento & ROI
+## Investimento & ROI
 
-| Item | Valor |
-|------|-------|
-| Desenvolvimento (90h, 2 devs) | R$ 7.200 |
-| IA + Ferramentas | R$ 122 |
-| Infraestrutura | R$ 415 |
-| **Total** | **R$ 7.732** |
-| **Preço Recomendado** | **R$ 15.465** |
-| **ROI em 12 meses** | **1.250%** |
-| **Payback** | **2 meses** |
+Desenvolvimento (90h, 2 devs) - R$ 7.200 
+IA + Ferramentas - R$ 122 
+Infraestrutura - R$ 415 
+Total - R$ 7.732 
+Preço Recomendado - R$ 15.465 
+ROI em 12 meses - 1.250% 
+Payback - 2 meses 
 
-## 📧 Contato
+##  Contato
 
-- **Email:** arthurbrilhante006@gmail.com
 - **LinkedIn:** [Arthur Brilhante](https://linkedin.com/in/arthurbrilhante)
 - **Demo ao vivo:** https://aura-frontend.onrender.com
-
-## 📄 Licença
-
-MIT License - veja [LICENSE](LICENSE) para detalhes.
-
 ---
 
-**Desenvolvido com ❤️ para FATEC Zona Sul**
-
-*Última atualização: Junho 2026*
+**Desenvolvido para FATEC Zona Sul**
