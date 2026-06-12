@@ -203,7 +203,7 @@ npm run test
 
 ## Investimento & ROI
 
-Desenvolvimento (90h, 2 devs) - R$ 7.200 
+Desenvolvimento (90h, 2 devs) - R$ 7.200
 IA + Ferramentas - R$ 122 
 Infraestrutura - R$ 415 
 Total - R$ 7.732 
