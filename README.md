@@ -203,13 +203,13 @@ npm run test
 
 ## Investimento & ROI
 
-Desenvolvimento (90h, 2 devs) - R$ 7.200
-IA + Ferramentas - R$ 122 
-Infraestrutura - R$ 415 
-Total - R$ 7.732 
-Preço Recomendado - R$ 15.465 
-ROI em 12 meses - 1.250% 
-Payback - 2 meses 
+Desenvolvimento (90h, 2 devs) - R$ 7.200;
+IA + Ferramentas - R$ 122;
+Infraestrutura - R$ 415;
+Total - R$ 7.732;
+Preço Recomendado - R$ 15.465;
+ROI em 12 meses - 1.250%;
+Payback - 2 meses.
 
 ##  Contato
 
