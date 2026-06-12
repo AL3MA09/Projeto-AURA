@@ -187,13 +187,6 @@ cd frontend
 npm run test
 ```
 
-## Documentação
-
-- [API Documentation](./docs/API.md) - Endpoints e schemas
-- [Architecture](./docs/ARCHITECTURE.md) - Design detalhado
-- [Flows Documentation](./docs/FLOWS.md) - Lógica dos fluxos
-- [Knowledge Base](./docs/KNOWLEDGE_BASE.md) - Base FATEC
-
 ##  Contribuindo
 
 1. Fork o projeto
