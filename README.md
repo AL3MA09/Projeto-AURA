@@ -1,50 +1,50 @@
-# AURA — Assistente Universitária de Respostas Acadêmicas
+# AURA — University Academic Response Assistant
 
 ![Badge](https://img.shields.io/badge/status-production%20ready-brightgreen)
 ![Badge](https://img.shields.io/badge/stack-Next.js%2FFastAPI-blue)
 ![Badge](https://img.shields.io/badge/voice-ElevenLabs%20TTS-orange)
 ![Badge](https://img.shields.io/badge/ai-Claude%2FGroq-blueviolet)
 
-**AURA** é uma assistente virtual inteligente especializada em atendimento acadêmico, disponível 24/7 por voz para responder dúvidas de alunos da FATEC Zona Sul.
+**AURA** is an intelligent virtual assistant specialized in academic support, available 24/7 via voice to answer questions from FATEC Zona Sul students.
 
-## 🎯 Visão Geral
+## 🎯 Overview
 
-AURA resolve o problema de sobrecarga na secretaria acadêmica fornecendo um canal de atendimento inteligente baseado em IA com:
+AURA solves the academic registrar's office overload by providing an intelligent AI-powered support channel with:
 
-- ✅ **Interface voice-first** (ChatGPT Voice Mode style)
-- ✅ **Voz feminina natural** em português brasileiro
-- ✅ **10 fluxos acadêmicos estruturados** com simulações
-- ✅ **Base de conhecimento FATEC** integrada e verificada
-- ✅ **Disponibilidade 24/7** sem intervenção humana
-- ✅ **Escalável** para outras unidades FATEC
+- ✅ **Voice-first interface** (ChatGPT Voice Mode style)
+- ✅ **Natural feminine voice** in Brazilian Portuguese
+- ✅ **10 structured academic flows** with simulations
+- ✅ **Integrated FATEC knowledge base** verified and up-to-date
+- ✅ **24/7 availability** without human intervention
+- ✅ **Scalable** to other FATEC units
 
-## 🚀 Funcionalidades
+## 🚀 Features
 
-### Fluxos Acadêmicos
-1. **Transferência de Curso** - Verificação de vagas e procedimentos
-2. **Cancelamento de Matrícula** - Processo com confirmação de impactos
-3. **Trancamento Semestral** - Prazo e regulamentações
-4. **Aproveitamento de Disciplinas** - Equivalência de cursos anteriores
-5. **Estágio Obrigatório** - Orientação completa do processo
-6. **Consulta de Histórico Escolar** - Status e prazos
-7. **Atestado de Matrícula** - Procedimento e entrega
-8. **Consulta de Professores** - Por disciplina e período
-9. **Disciplinas por Semestre** - Grade completa
-10. **Datas de Avaliações** - Redirecionamento ao professor
+### Academic Flows
+1. **Course Transfer** - Vacancy verification and procedures
+2. **Enrollment Cancellation** - Process with impact confirmation
+3. **Semester Lock** - Deadline and regulations
+4. **Discipline Equivalence** - Prior course credit transfer
+5. **Mandatory Internship** - Complete process guidance
+6. **Academic Transcript** - Status and deadlines
+7. **Enrollment Certificate** - Procedure and delivery
+8. **Professor Inquiry** - By discipline and semester
+9. **Semester Disciplines** - Complete grade plan
+10. **Exam Dates** - Redirection to professor
 
-### Base de Conhecimento
-- 📚 Professores e disciplinas oficiais (ADS)
-- 📅 Calendário acadêmico 2026
-- 📄 Procedimentos de documentos
-- 👥 Coordenadores e contatos
-- 🎓 Estrutura de estágio
-- 🔄 Políticas de matrícula
+### Knowledge Base
+- 📚 Official professors and disciplines (ADS)
+- 📅 Academic calendar 2026
+- 📄 Document procedures
+- 👥 Coordinators and contacts
+- 🎓 Internship structure
+- 🔄 Enrollment policies
 
-## 💻 Stack Tecnológico
+## 💻 Tech Stack
 
 ### Frontend
 - **Framework:** Next.js 14 (React)
-- **Animações:** Framer Motion
+- **Animations:** Framer Motion
 - **Voice Input:** Web Speech API
 - **Voice Output:** ElevenLabs TTS
 - **Styling:** Tailwind CSS + Poppins Font
@@ -52,17 +52,17 @@ AURA resolve o problema de sobrecarga na secretaria acadêmica fornecendo um can
 ### Backend
 - **Framework:** FastAPI (Python)
 - **LLM:** Groq (llama-3.3-70b) + Claude fallback
-- **Banco:** PostgreSQL + Redis (cache)
-- **Vector DB:** ChromaDB (pronto para RAG)
+- **Database:** PostgreSQL + Redis (cache)
+- **Vector DB:** ChromaDB (ready for RAG)
 - **Voice Processing:** ElevenLabs API
 
 ### DevOps
 - **Frontend Deploy:** Render (auto-scaling)
 - **Backend Deploy:** Render (auto-scaling)
 - **CI/CD:** Git push → auto-deploy
-- **Monitoramento:** Render logs
+- **Monitoring:** Render logs
 
-## 📊 Arquitetura
+## 📊 Architecture
 
 ```
 ┌─────────────────────────────────────────────────────┐
@@ -87,29 +87,29 @@ AURA resolve o problema de sobrecarga na secretaria acadêmica fornecendo um can
     └────────┘           └────────┘
 ```
 
-## 🎯 Performance & Métricas
+## 🎯 Performance & Metrics
 
-| Métrica | Valor |
-|---------|-------|
-| Tempo de resposta | < 2s (median) |
-| Disponibilidade | 99.9% (uptime) |
-| Requisições/mês | ~30,000 (gratuito Groq) |
-| Taxa de erro | < 0.1% |
-| Satisfação do usuário | N/A (produção recente) |
+| Metric | Value |
+|--------|-------|
+| Response time | < 2s (median) |
+| Availability | 99.9% (uptime) |
+| Requests/month | ~30,000 (free Groq) |
+| Error rate | < 0.1% |
+| User satisfaction | N/A (recently in production) |
 
-## 🔐 Segurança
+## 🔐 Security
 
-- ✅ Sem credenciais hardcoded
-- ✅ .env ignorado do Git
-- ✅ CORS configurado
-- ✅ Rate limiting habilitado
-- ✅ LGPD compliance (sem armazenar CPF completo)
-- ✅ Logs auditados
-- ✅ Dependências atualizadas
+- ✅ No hardcoded credentials
+- ✅ .env ignored by Git
+- ✅ CORS configured
+- ✅ Rate limiting enabled
+- ✅ LGPD compliance (no full CPF storage)
+- ✅ Audit logs enabled
+- ✅ Dependencies up-to-date
 
-## 📦 Instalação & Setup
+## 📦 Installation & Setup
 
-### Pré-requisitos
+### Prerequisites
 - Python 3.11+
 - Node.js 18+
 - PostgreSQL 14+
@@ -119,17 +119,17 @@ AURA resolve o problema de sobrecarga na secretaria acadêmica fornecendo um can
 ```bash
 cd backend
 python -m venv venv
-source venv/bin/activate  # ou `venv\Scripts\activate` no Windows
+source venv/bin/activate  # or `venv\Scripts\activate` on Windows
 pip install -r requirements.txt
 
-# Configurar .env
+# Configure .env
 cp .env.example .env
-# Editar .env com suas credenciais
+# Edit .env with your credentials
 
-# Rodar migrations
+# Run migrations
 alembic upgrade head
 
-# Iniciar servidor
+# Start server
 uvicorn main:app --reload
 ```
 
@@ -138,43 +138,43 @@ uvicorn main:app --reload
 cd frontend
 npm install
 
-# Configurar .env.local
+# Configure .env.local
 cp .env.local.example .env.local
-# Editar NEXT_PUBLIC_API_URL e NEXT_PUBLIC_ELEVENLABS_*
+# Edit NEXT_PUBLIC_API_URL and NEXT_PUBLIC_ELEVENLABS_*
 
-# Rodar dev
+# Run dev server
 npm run dev
 ```
 
-Acesse em: http://localhost:3000
+Access at: http://localhost:3000
 
 ## 🌐 Deploy (Render)
 
 ### Frontend
 ```bash
-git push  # CI/CD automático
+git push  # Automatic CI/CD
 # Build: npm install && npm run build
 # Start: npm start
 ```
 
 ### Backend
 ```bash
-git push  # CI/CD automático
+git push  # Automatic CI/CD
 # Build: pip install -r requirements.txt
 # Start: uvicorn main:app --host 0.0.0.0 --port $PORT
 ```
 
-URLs de Produção:
+Production URLs:
 - Frontend: https://aura-frontend.onrender.com
 - Backend: https://aura-backend-rj9u.onrender.com
 
-## 📝 Variáveis de Ambiente
+## 📝 Environment Variables
 
 ### Backend (.env)
 ```
-GROQ_API_KEY=<sua-chave-groq>
-ANTHROPIC_API_KEY=<sua-chave-anthropic>
-ELEVENLABS_API_KEY=<sua-chave-elevenlabs>
+GROQ_API_KEY=<your-groq-key>
+ANTHROPIC_API_KEY=<your-anthropic-key>
+ELEVENLABS_API_KEY=<your-elevenlabs-key>
 ELEVENLABS_VOICE_ID=7iqXtOF3wl3pomwXFY7G
 DATABASE_URL=postgresql://user:pass@localhost/aura_db
 REDIS_URL=redis://localhost:6379/0
@@ -183,11 +183,11 @@ REDIS_URL=redis://localhost:6379/0
 ### Frontend (.env.local)
 ```
 NEXT_PUBLIC_API_URL=https://aura-backend-rj9u.onrender.com
-NEXT_PUBLIC_ELEVENLABS_API_KEY=<sua-chave>
+NEXT_PUBLIC_ELEVENLABS_API_KEY=<your-key>
 NEXT_PUBLIC_ELEVENLABS_VOICE_ID=7iqXtOF3wl3pomwXFY7G
 ```
 
-## 🧪 Testes
+## 🧪 Testing
 
 ```bash
 # Backend
@@ -199,55 +199,55 @@ cd frontend
 npm run test
 ```
 
-## 📚 Documentação
+## 📚 Documentation
 
-- [API Documentation](./docs/API.md) - Endpoints e schemas
-- [Architecture](./docs/ARCHITECTURE.md) - Design detalhado
-- [Flows Documentation](./docs/FLOWS.md) - Lógica dos fluxos
-- [Knowledge Base](./docs/KNOWLEDGE_BASE.md) - Base FATEC
+- [API Documentation](./docs/API.md) - Endpoints and schemas
+- [Architecture](./docs/ARCHITECTURE.md) - Detailed design
+- [Flows Documentation](./docs/FLOWS.md) - Flow logic
+- [Knowledge Base](./docs/KNOWLEDGE_BASE.md) - FATEC knowledge base
 
-## 🤝 Contribuindo
+## 🤝 Contributing
 
-1. Fork o projeto
-2. Crie uma branch (`git checkout -b feature/AmazingFeature`)
+1. Fork the project
+2. Create a branch (`git checkout -b feature/AmazingFeature`)
 3. Commit (`git commit -m 'Add AmazingFeature'`)
 4. Push (`git push origin feature/AmazingFeature`)
-5. Abra um Pull Request
+5. Open a Pull Request
 
 ## 📊 Roadmap
 
-- [ ] Integração com SIGA (sistema acadêmico)
-- [ ] Suporte a outros cursos (GTI, Logística, Marketing)
-- [ ] Análise de sentimento em feedback
-- [ ] Dashboard administrativo
-- [ ] Exportação de estatísticas
-- [ ] Integração WhatsApp/Telegram
-- [ ] Suporte multilíngue
+- [ ] SIGA integration (academic system)
+- [ ] Support for other courses (GTI, Logistics, Marketing)
+- [ ] Sentiment analysis on feedback
+- [ ] Admin dashboard
+- [ ] Statistics export
+- [ ] WhatsApp/Telegram integration
+- [ ] Multi-language support
 
-## 💰 Investimento & ROI
+## 💰 Investment & ROI
 
-| Item | Valor |
+| Item | Value |
 |------|-------|
-| Desenvolvimento (90h, 2 devs) | R$ 7.200 |
-| IA + Ferramentas | R$ 122 |
-| Infraestrutura | R$ 415 |
-| **Total** | **R$ 7.732** |
-| **Preço Recomendado** | **R$ 15.465** |
-| **ROI em 12 meses** | **1.250%** |
-| **Payback** | **2 meses** |
+| Development (90h, 2 devs) | R$ 7,200 |
+| AI + Tools | R$ 122 |
+| Infrastructure | R$ 415 |
+| **Total** | **R$ 7,732** |
+| **Recommended Price** | **R$ 15,465** |
+| **12-month ROI** | **1,250%** |
+| **Payback** | **2 months** |
 
-## 📧 Contato
+## 📧 Contact
 
 - **Email:** arthurbrilhante006@gmail.com
 - **LinkedIn:** [Arthur Brilhante](https://linkedin.com/in/arthurbrilhante)
-- **Demo ao vivo:** https://aura-frontend.onrender.com
+- **Live Demo:** https://aura-frontend.onrender.com
 
-## 📄 Licença
+## 📄 License
 
-MIT License - veja [LICENSE](LICENSE) para detalhes.
+MIT License - see [LICENSE](LICENSE) for details.
 
 ---
 
-**Desenvolvido com ❤️ para FATEC Zona Sul**
+**Built with ❤️ for FATEC Zona Sul**
 
-*Última atualização: Junho 2026*
+*Last updated: June 2026*
